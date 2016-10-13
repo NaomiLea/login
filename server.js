@@ -95,18 +95,59 @@ app.post('/display', urlencodedParser, function(req, res) {
 
     user.save((err) => {
         if (err) {
-        
-           return res.redirect('./');
+
+            return res.redirect('./');
 
 
-        };
+        } else {
+            res.render('userlogin', {
+                fname: req.body.username,
+                lname: req.body.password,
+                firstlogin: true
+
+            });
+        }
+
+
     });
-    res.render('login', {
-        fname: req.body.username,
-        lname: req.body.password,
-        firstlogin: true
+
+})
+
+app.post('/login', urlencodedParser, function(req, res) {
+    // Prepare output in JSON format
+    response = {
+        first_name: req.body.username,
+        last_name: req.body.password
+    };
+    console.log(response);
+
+
+    var user = new User({
+        username: req.body.username,
+        password: req.body.password,
+        admin: true
+    });
+
+
+
+    user.save((err) => {
+        if (err) {
+
+            return res.redirect('./');
+
+
+        } else {
+            res.render('login', {
+                fname: req.body.username,
+                lname: req.body.password,
+                firstlogin: true
+
+            });
+        }
+
 
     });
+
 })
 
 

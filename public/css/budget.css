@@ -1,0 +1,85 @@
+body {
+    background-color: #b4f2cb;
+    color: #5EC885;
+}
+
+h3 {
+    border-style: none none dotted none;
+}
+
+.totalPrice {
+    font-size: 40px;
+    color: teal;
+}
+
+p {
+    border: none;
+    border-radius: 90px;
+    background-color: #59de92;
+    width: 230px;
+    height: 50px;
+    margin: 10px;
+    text-align: center;
+    font-size: 200%;
+    float: left;
+}
+
+.delete {
+    background-color: none;
+    width: 50px;
+    color: black;
+    margin-left: 20px;
+    font-family: arial;
+}
+
+.delete:hover {
+    background-color: red;
+
+}
+
+{
+    border: none;
+    background-color: green;
+}
+
+.listed {
+    display: inline-block
+}
+
+h2 {
+    border: none;
+    border-radius: 90px;
+    background-color: #59de92;
+    width: 100px;
+    height: 50px;
+    margin: auto;
+    text-align: center;
+    font-size: 200%;
+    color: #5EC885;
+    float: left;
+}
+
+input {
+    margin: 30px 60px 30px 60px;
+    color: green;
+
+}
+
+.line {
+    display: inline-block;
+}
+
+.messages {
+    display: inline-block;
+}
+
+.title {
+    background-color: teal;
+    border-radius: 0px;
+    
+}
+
+.productInput {
+    margin-left:95px;
+    margin-right: 40px;
+}

@@ -1,0 +1,64 @@
+{{#if firstlogin}}
+Person logged in is {{{fname}}}
+<body>
+   <center> <div id="menu">
+        <h3>Shopping list</h3>
+        <div class="line">
+            <p class="title">Amount</p>
+            <p class="title">Product</p>
+            <p class="title">Price</p>
+          
+
+            	<form method="POST" action="budget">
+	                <input class='amountInput' type='number' name='amount' min='0' max='1000' step='1'>
+	                <input class='productInput' type="text" name="product" value="">
+	                <input class='priceInput' type='number' name='price' min='0' max='1000000' step='0.01'>
+	                <input type='hidden' name='fname' value ='{{fname}}'>
+	              	<input type='hidden' name='lname' value ='{{lname}}'>
+                <button class="food">Add</button>
+               </form>
+        </div>
+    </div>
+    <div class="totalPrice">
+    </div>
+    </center>
+</body>
+{{else}}
+Person logged in is {{{fname}}} {{{lname}}}
+<body>
+   <center> <div id="menu">
+        <h3>Shopping list</h3>
+        <div class="line">
+            <p class="title">Amount</p>
+            <p class="title">Product</p>
+            <p class="title">Price</p>
+          
+
+            	<form method="POST" action="budget">
+	                <input class='amountInput' type='number' name='amount' min='0' max='1000' step='1'>
+	                <input class='productInput' type="text" name="product" value="">
+	                <input class='priceInput' type='number' name='price' min='0' max='1000000' step='0.01'>
+	                <input type='hidden' name='fname' value ='{{fname}}'>
+	              	<input type='hidden' name='lname' value ='{{lname}}'>
+                <button class="food">Add</button>
+               </form>
+                        <div>
+                           <p class="product"> {{{amount}}}</p>
+                           <p class="product"> {{{product}}}</p>
+                           <p class="product"> {{{price}}}</p>
+            			</div>
+
+            		<div>
+            			<p class="product">{{{totalprice}}}</p>
+            		</div>
+         
+            <div class="messages">
+
+            </div>
+        </div>
+    </div>
+    <div class="totalPrice">
+    </div>
+    </center>
+</body>
+{{/if}}

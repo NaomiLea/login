@@ -7,29 +7,32 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema
 mongoose.Promise = global.Promise;
 
-
+/*CONNECTING TO MONGOOSE*/
 app.connect = function connect(opts) {
     mongoose.Promise = global.Promise;
     mongoose.connect(`mongodb://${opts.server}:${opts.port}/${opts.db}`);
     return mongoose.connection;
 };
-
+/*CREATING SCHEMAS*/
 var userSchema = new Schema({
     name: String,
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    price: { type: String, required: false },
+    product: { type: String, required: false },
+    amount: { type: String, required: false },
     admin: Boolean
 });
 
-var priceSchema = new Schema({
+/*var priceSchema = new Schema({
     price: { type: String, required: true },
     product: { type: String, required: true },
     amount: { type: String, required: true },
     admin: Boolean
 });
-
+*/
 var User = mongoose.model('User', userSchema);
-var listItem = mongoose.model('listItem', priceSchema);
+/*var listItem = mongoose.model('listItem', priceSchema);*/
 
 //DO NOT CHANGE - HANDLEBARS!
 app.engine('handlebars', exphbs({
@@ -47,71 +50,83 @@ mongoose.connect('mongodb://localhost/login');
 // Create application/x-www-form-urlencoded parser
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
+app.use(express.static('./', {index: 'default.html'}))
+
 app.use(express.static('public'));
 app.get('/budget.html', function(req, res) {
     res.sendFile(__dirname + "/" + "budget.html");
 })
 
 app.post('/budget', urlencodedParser, function(req, res) {
-    var list = new listItem({
-        amount: req.body.amount,
-        product: req.body.product,
-        price: req.body.price,
-        admin: true
+        var list = new User({
+            username: req.body.username,
+            amount: req.body.amount,
+            product: req.body.product,
+            price: req.body.price,
+            admin: true
+        })
+
+        list.save((err) => {
+            if (err) throw err;
+        });
+        console.log(req.body);
+        res.render('login', {
+            firstlogin: false,
+            amount: req.body.amount,
+            product: req.body.product,
+            price: req.body.price,
+            totalprice: req.body.amount * req.body.price,
+            fname: req.body.fname,
+
+
+        });
     })
 
-    list.save((err) => {
-        if (err) throw err;
-    });
-    console.log(req.body);
-    res.render('login', {
-        firstlogin: false,
-        amount: req.body.amount,
-        product: req.body.product,
-        price: req.body.price,
-        totalprice: req.body.amount * req.body.price,
-        fname: req.body.fname,
-        lname: req.body.lname
-
-    });
+app.post('/intro', function(req, res){
+    res.redirect('./login.html');
 })
 
+app.post('/signup', function(req, res){
+    res.redirect('./index.html');
+})
+    /*SIGN UP FEAUTURES*/
 app.post('/display', urlencodedParser, function(req, res) {
-    // Prepare output in JSON format
-    response = {
-        first_name: req.body.username,
-        last_name: req.body.password
-    };
-    console.log(response);
+        // Prepare output in JSON format
+        response = {
+            first_name: req.body.username,
+            last_name: req.body.password
+        };
+        console.log(response);
 
 
-    var user = new User({
-        username: req.body.username,
-        password: req.body.password,
-        admin: true
-    });
+        var user = new User({
+            username: req.body.username,
+            password: req.body.password,
+            admin: true
+        });
 
 
 
-    user.save((err) => {
-        if (err) {
+        user.save((err) => {
+            if (err) {
 
-            return res.redirect('./');
-
-
-        } else {
-            res.render('userlogin', {
-                fname: req.body.username,
-                lname: req.body.password,
-                firstlogin: true
-
-            });
-        }
+                return res.redirect('./');
 
 
-    });
+            } else {
+                res.render('userlogin', {
+                    fname: req.body.username,
+                    lname: req.body.password,
+                    firstlogin: true
 
-})
+                });
+            }
+
+
+        });
+
+    })
+    /*LOGIN FEATURES*/
 
 app.post('/login', urlencodedParser, function(req, res) {
     // Prepare output in JSON format
@@ -127,10 +142,8 @@ app.post('/login', urlencodedParser, function(req, res) {
         if (err) throw err;
         if (!user) {
             console.log('got here');
-            res.json({
-                success: false,
-                message: 'Authentication failed. User not found.'
-            });
+            return res.redirect('./login.html');
+
         } else if (user) {
             User.findOne({
                 password: req.body.password,
@@ -160,35 +173,9 @@ app.post('/login', urlencodedParser, function(req, res) {
 
     });
 
-    /*    var user = new User({
-            username: req.body.username,
-            password: req.body.password,
-            admin: true
-        });
-
-
-
-        user.save((err) => {
-            if (err) {
-
-                return res.redirect('./');
-
-
-            } else {
-                res.render('login', {
-                    fname: req.body.username,
-                    lname: req.body.password,
-                    firstlogin: true
-
-                });
-            }
-            
-
-
-    });*/
-
 })
 
+/*LISTENING TO SERVER*/
 
 var server = app.listen(8081, function() {
     var host = server.address().address

@@ -119,34 +119,73 @@ app.post('/login', urlencodedParser, function(req, res) {
         first_name: req.body.username,
         last_name: req.body.password
     };
-    console.log(response);
-
-
-    var user = new User({
+    console.log(req.body.username);
+    User.findOne({
         username: req.body.username,
-        password: req.body.password,
-        admin: true
-    });
-
-
-
-    user.save((err) => {
-        if (err) {
-
-            return res.redirect('./');
-
-
+    }, function(err, user) {
+        console.log(user);
+        if (err) throw err;
+        if (!user) {
+            console.log('got here');
+            res.json({
+                success: false,
+                message: 'Authentication failed. User not found.'
+            });
+        } else if (user) {
+            User.findOne({
+                password: req.body.password,
+            }, function(err, pass) {
+                if (err) throw err;
+                if (!pass) {
+                    res.json({
+                        success: false,
+                        message: 'Authentication failed. Password not found.'
+                    });
+                } else {
+                    res.render('login', {
+                        fname: req.body.username,
+                        lname: req.body.password,
+                        firstlogin: true
+                    })
+                };
+            })
         } else {
             res.render('login', {
                 fname: req.body.username,
                 lname: req.body.password,
                 firstlogin: true
-
             });
+
         }
 
-
     });
+
+    /*    var user = new User({
+            username: req.body.username,
+            password: req.body.password,
+            admin: true
+        });
+
+
+
+        user.save((err) => {
+            if (err) {
+
+                return res.redirect('./');
+
+
+            } else {
+                res.render('login', {
+                    fname: req.body.username,
+                    lname: req.body.password,
+                    firstlogin: true
+
+                });
+            }
+            
+
+
+    });*/
 
 })
 

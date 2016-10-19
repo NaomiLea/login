@@ -22,6 +22,7 @@ p {
     text-align: center;
     font-size: 200%;
     float: left;
+    font-family: arial;
 }
 
 .delete {
@@ -82,4 +83,9 @@ input {
 .productInput {
     margin-left:95px;
     margin-right: 40px;
+}
+
+input {
+    width: 100px;
+   
 }
